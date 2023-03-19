@@ -1,14 +1,26 @@
 package pl.kryptografia.aes;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class WindowController {
-    @FXML
-    private Label welcomeText;
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    private TextArea tekstJawny;
+
+    @FXML
+    protected void onSzyfrujButtonClick() {
+
+        byte[] zamienionyNaBajty = AES.SubBytes(tekstJawny.getText().getBytes(StandardCharsets.UTF_8));
+        byte[][] podzielone = AES.podzielTablice(zamienionyNaBajty);
+
+
+        System.out.println(Arrays.toString(zamienionyNaBajty));
+        System.out.println(Arrays.deepToString(podzielone));
+
     }
 }
