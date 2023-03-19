@@ -5,11 +5,11 @@ import java.util.Arrays;
 public class AES {
 
     public static byte[][] podzielTablice(byte[] oryginalnaTablica) {
-        int liczbaKawalkow = (int) Math.ceil((double) oryginalnaTablica.length / 4); //liczba po podzieleniu przez 4, zaokraglona w gore
+        int liczbaKawalkow = (int) Math.ceil((double) oryginalnaTablica.length / 16); //liczba po podzieleniu przez 16, zaokraglona w gore
 
 
 
-        byte[][] podzielonaTablica = new byte[liczbaKawalkow + 1][4]; //nowa tablica domyslnie wypelniona zerami, dodajemy jeden kawalek w ktorym bedzie informacja o tym ile zer dodalismy
+        byte[][] podzielonaTablica = new byte[liczbaKawalkow + 1][16]; //nowa tablica domyslnie wypelniona zerami, dodajemy jeden kawalek w ktorym bedzie informacja o tym ile zer dodalismy
 
         int x = 0;
         int y = 0;
@@ -19,14 +19,14 @@ public class AES {
             podzielonaTablica[x][y] = oryginalnaTablica[i];
             y++;
 
-            if (y == 4) {
+            if (y == 16) {
                 x++;
                 y = 0;
             }
             iloscLiter = i + 1; //+1 bo liczy od 0, a potrzebujemy ilosci liter
         }
 
-        podzielonaTablica[liczbaKawalkow][0] = (byte) ((liczbaKawalkow * 4) - iloscLiter);
+        podzielonaTablica[liczbaKawalkow][0] = (byte) ((liczbaKawalkow * 16) - iloscLiter);
 
         return podzielonaTablica;
     }
