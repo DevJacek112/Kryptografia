@@ -42,4 +42,26 @@ public class AES {
         return przetlumaczonaTablica;
     }
 
+    public byte[][] shiftRows(byte[][] tablica){
+        for(int i=1;i<4;i++){
+            //kopia rzędu
+            byte[] pom = new byte[4];
+            for(int j=0;j<4;j++){
+                pom[j]=tablica[i][j];
+            }
+            //pierwszy element rzędu
+            byte tmp = tablica[i][0];
+            //wzór [i][j-i%4]
+            for(int j=1;j<4;j++){
+                int modulo = j-i;
+                while(modulo<0)modulo+=4;
+                modulo=modulo%4;
+                tablica[i][modulo] = pom[j];
+            }
+            //wstawienie pierwszego elementu na odpowiednie miejsce
+            tablica[i][4-i]=tmp;
+        }
+        return  tablica;
+    }
+
 }
