@@ -15,12 +15,20 @@ public class WindowController {
     @FXML
     protected void onSzyfrujButtonClick() {
 
-        byte[] zamienionyNaBajty = AES.SubBytes(tekstJawny.getText().getBytes(StandardCharsets.UTF_8));
-        byte[][] podzielone = AES.podzielTablice(zamienionyNaBajty);
+        System.out.println(Arrays.toString(tekstJawny.getText().getBytes(StandardCharsets.UTF_8)));
 
+        byte[][] podzielone = AES.podzielTablice(tekstJawny.getText().getBytes(StandardCharsets.UTF_8));
 
-        System.out.println(Arrays.toString(zamienionyNaBajty));
         System.out.println(Arrays.deepToString(podzielone));
+
+        byte[][] zamienionyNaBajty = AES.SubBytes(podzielone);
+
+        System.out.println(Arrays.deepToString(zamienionyNaBajty));
+
+        byte[][] przetasowaneKolumny = AES.shiftRows(zamienionyNaBajty);
+
+        System.out.println(Arrays.deepToString(przetasowaneKolumny));
+
 
     }
 }

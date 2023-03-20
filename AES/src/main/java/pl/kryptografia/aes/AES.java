@@ -1,7 +1,5 @@
 package pl.kryptografia.aes;
 
-import java.util.Arrays;
-
 public class AES {
 
     public static byte[][] podzielTablice(byte[] oryginalnaTablica) {
@@ -31,18 +29,20 @@ public class AES {
         return podzielonaTablica;
     }
 
-    public static byte[] SubBytes(byte[] TablicaBajtow){
+    public static byte[][] SubBytes(byte[][] TablicaBajtow){
 
-        byte[] przetlumaczonaTablica = new byte[TablicaBajtow.length];
+        byte[][] przetlumaczonaTablica = new byte[TablicaBajtow.length][16];
 
         for(int i = 0; i < TablicaBajtow.length; i++){
-            przetlumaczonaTablica[i] = RijndaelSBox.ZnajdzWSBoxie(TablicaBajtow[i]); //dla kazdego bajta znajdujemy odpowiedni zamiennik w sboxie
+            for(int j = 0; j < 15; j++){
+                przetlumaczonaTablica[i][j] = RijndaelSBox.ZnajdzWSBoxie(TablicaBajtow[i][j]); //dla kazdego bajta znajdujemy odpowiedni zamiennik w sboxie
+            }
         }
 
         return przetlumaczonaTablica;
     }
 
-    public byte[][] shiftRows(byte[][] tablica){
+    public static byte[][] shiftRows(byte[][] tablica){
         for(int i=1;i<4;i++){
             //kopia rzędu
             byte[] pom = new byte[4];
