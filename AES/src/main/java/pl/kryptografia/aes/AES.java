@@ -29,7 +29,7 @@ public class AES {
         return podzielonaTablica;
     }
 
-    public static byte[][] SubBytes(byte[][] TablicaBajtow){
+    public static byte[][][] SubBytes(byte[][] TablicaBajtow){
 
         byte[][] przetlumaczonaTablica = new byte[TablicaBajtow.length][16];
 
@@ -39,27 +39,46 @@ public class AES {
             }
         }
 
-        return przetlumaczonaTablica;
+        byte[][][] podzielonaTablica = new byte[TablicaBajtow.length][4][4];
+
+        for (int i = 0; i < TablicaBajtow.length; i++){
+
+            for(int j = 0; j < 4; j++){
+
+                for(int k = 0; k < 4; k++){
+                    podzielonaTablica[i][j][k] = przetlumaczonaTablica[i][j + k];
+                }
+
+            }
+
+        }
+
+        return podzielonaTablica;
     }
 
-    public static byte[][] shiftRows(byte[][] tablica){
-        for(int i=1;i<4;i++){
-            //kopia rzędu
-            byte[] pom = new byte[4];
-            for(int j=0;j<4;j++){
-                pom[j]=tablica[i][j];
+    public static byte[][][] shiftRows(byte[][][] tablica){
+
+        for(int k = 0; k < tablica.length; k++){
+
+            for(int i=1;i<4;i++) {
+                //kopia rzędu
+                byte[] pom = new byte[4];
+                for (int j = 0; j < 4; j++) {
+                    pom[j] = tablica[k][i][j];
+                }
+                //pierwszy element rzędu
+                byte tmp = tablica[k][i][0];
+                //wzór [i][j-i%4]
+                for (int j = 1; j < 4; j++) {
+                    int modulo = j - i;
+                    while (modulo < 0) modulo += 4;
+                    modulo = modulo % 4;
+                    tablica[k][i][modulo] = pom[j];
+                }
+                //wstawienie pierwszego elementu na odpowiednie miejsce
+                tablica[k][i][4 - i] = tmp;
             }
-            //pierwszy element rzędu
-            byte tmp = tablica[i][0];
-            //wzór [i][j-i%4]
-            for(int j=1;j<4;j++){
-                int modulo = j-i;
-                while(modulo<0)modulo+=4;
-                modulo=modulo%4;
-                tablica[i][modulo] = pom[j];
-            }
-            //wstawienie pierwszego elementu na odpowiednie miejsce
-            tablica[i][4-i]=tmp;
+
         }
         return  tablica;
     }

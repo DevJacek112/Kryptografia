@@ -21,11 +21,13 @@ public class WindowController {
 
         System.out.println(Arrays.deepToString(podzielone));
 
-        byte[][] zamienionyNaBajty = AES.SubBytes(podzielone);
+        byte[][][] zamienionyNaBajty = AES.SubBytes(podzielone);
 
         System.out.println(Arrays.deepToString(zamienionyNaBajty));
 
-        byte[][] przetasowaneKolumny = AES.shiftRows(zamienionyNaBajty);
+
+
+        byte[][][] przetasowaneKolumny = AES.shiftRows(zamienionyNaBajty);
 
         System.out.println(Arrays.deepToString(przetasowaneKolumny));
 
