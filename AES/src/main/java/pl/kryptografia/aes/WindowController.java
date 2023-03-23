@@ -13,22 +13,30 @@ public class WindowController {
     private TextArea tekstJawny;
 
     @FXML
+    private TextField kluczPoleTekstowe;
+
+    @FXML
     protected void onSzyfrujButtonClick() {
 
-        System.out.println(Arrays.toString(tekstJawny.getText().getBytes(StandardCharsets.UTF_8)));
-
+        //--- przygotowanie tekstu do dzialania na nim
+        byte[] klucz = kluczPoleTekstowe.getText().getBytes();
         byte[][] podzielone = AES.podzielTablice(tekstJawny.getText().getBytes(StandardCharsets.UTF_8));
+        System.out.println("Tekst podzielony na bloczki: ");
+        System.out.println(Arrays.deepToString(podzielone)); //podzielony tekst
 
-        System.out.println(Arrays.deepToString(podzielone));
+        byte[][] tablicaKluczy = AES.UzupelnijKlucze(podzielone.length, klucz);
+        System.out.println("Tablica kluczy: ");
+        System.out.println(Arrays.deepToString(tablicaKluczy)); //przypisane klucze
 
+
+        //--- tu sie zaczyna algorytm do kazdego bloczku
+        System.out.println("");
+        System.out.println("SubBytes: ");
         byte[][][] zamienionyNaBajty = AES.SubBytes(podzielone);
-
         System.out.println(Arrays.deepToString(zamienionyNaBajty));
 
-
-
+        System.out.println("MixColumns ");
         byte[][][] przetasowaneKolumny = AES.shiftRows(zamienionyNaBajty);
-
         System.out.println(Arrays.deepToString(przetasowaneKolumny));
 
 

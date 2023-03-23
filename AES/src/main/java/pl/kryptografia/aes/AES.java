@@ -2,6 +2,19 @@ package pl.kryptografia.aes;
 
 public class AES {
 
+    public static byte[][] UzupelnijKlucze(int dlugoscTablicy, byte[] pojedynczyKlucz){
+
+        byte[][] tablicaKluczy = new byte[dlugoscTablicy][16];
+
+        for(int i =0; i < dlugoscTablicy; i++){
+            tablicaKluczy[i] = pojedynczyKlucz;
+        }
+
+        return tablicaKluczy;
+
+    }
+
+
     public static byte[][] podzielTablice(byte[] oryginalnaTablica) {
         int liczbaKawalkow = (int) Math.ceil((double) oryginalnaTablica.length / 16); //liczba po podzieleniu przez 16, zaokraglona w gore
 

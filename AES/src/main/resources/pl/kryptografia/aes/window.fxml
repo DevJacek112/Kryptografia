@@ -11,13 +11,13 @@
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj klucz" />
-   <TextField />
-   <Button mnemonicParsing="false" text="Generuj losowy klucz" />
-   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj tekst, który chcesz szyfrować/deszyfrować" />
-   <TextArea fx:id="tekstJawny" prefHeight="200.0" prefWidth="200.0" text="Jestem Polakiem z korzeniem z Afryki Choć nigdy nie byłem tam Znam oryginalne leczenia techniki Dyplom kupiłem, to mam" />
-   <Button mnemonicParsing="false" onAction="#onSzyfrujButtonClick" text="Szyfruj" />
-   <Button mnemonicParsing="false" text="Deszyfruj" />
-   <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wyjście" />
-   <TextArea prefHeight="200.0" prefWidth="200.0" />
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj klucz" />
+    <TextField fx:id="kluczPoleTekstowe" text="nZr4u7x!A%D*G-Ka" />
+    <Button mnemonicParsing="false" text="Generuj losowy klucz" />
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj tekst, który chcesz szyfrować/deszyfrować" />
+    <TextArea fx:id="tekstJawny" prefHeight="200.0" prefWidth="200.0" text="Jestem Polakiem z korzeniem z Afryki Choć nigdy nie byłem tam Znam oryginalne leczenia techniki Dyplom kupiłem, to mam" />
+    <Button mnemonicParsing="false" onAction="#onSzyfrujButtonClick" text="Szyfruj" />
+    <Button mnemonicParsing="false" text="Deszyfruj" />
+    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wyjście" />
+    <TextArea prefHeight="200.0" prefWidth="200.0" />
 </VBox>
