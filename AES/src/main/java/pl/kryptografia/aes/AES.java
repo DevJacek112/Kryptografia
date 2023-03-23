@@ -1,13 +1,78 @@
 package pl.kryptografia.aes;
 
+import java.util.Arrays;
+
 public class AES {
+
+    public static byte[] xor(byte[] a, byte[] b) {
+        byte[] result = new byte[Math.min(a.length, b.length)];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (byte) (a[i] ^ b[i]);
+        }
+        return result;
+    }
+
+    public static byte[][] Rcon = {
+            {0x01, 0x00, 0x00, 0x00},
+            {0x02, 0x00, 0x00, 0x00},
+            {0x04, 0x00, 0x00, 0x00},
+            {0x08, 0x00, 0x00, 0x00},
+            {0x10, 0x00, 0x00, 0x00},
+            {0x20, 0x00, 0x00, 0x00},
+            {0x40, 0x00, 0x00, 0x00},
+            {(byte) 0x80, 0x00, 0x00, 0x00},
+            {0x1B, 0x00, 0x00, 0x00},
+            {0x36, 0x00, 0x00, 0x00}
+    };
+
+    public static byte[][] kluczRunda(int numerRundy, byte[][] kluczeTablica){
+
+        if(numerRundy == 1){
+            byte[] naszaKolumna = {kluczeTablica[1][3], kluczeTablica[1][7], kluczeTablica[1][11], kluczeTablica[1][15]};
+
+            byte tymczasowy = naszaKolumna[3];
+            naszaKolumna[3] = naszaKolumna[0];
+            naszaKolumna[0] = tymczasowy; //zamieniamy 4 miejsce z 16
+
+            for(int j = 1; j < 4; j++){
+                naszaKolumna[j] = RijndaelSBox.ZnajdzWSBoxie(naszaKolumna[j]);
+            }
+
+            byte[] pierwszaKolumna = {kluczeTablica[1][0], kluczeTablica[1][4], kluczeTablica[1][8], kluczeTablica[1][12]};
+
+            byte[] wynikPierwszaKolumna = xor((xor(naszaKolumna, pierwszaKolumna)), Rcon[0]);
+
+            byte[] drugaKolumna = {kluczeTablica[1][1],kluczeTablica[1][5],kluczeTablica[1][9],kluczeTablica[1][13]};
+
+            byte[] wynikDrugaKolumna = xor(wynikPierwszaKolumna, drugaKolumna);
+
+            byte[] trzeciaKolumna = {kluczeTablica[1][2],kluczeTablica[1][6],kluczeTablica[1][10],kluczeTablica[1][14]};
+
+            byte[] wynikTrzeciaKolumna = xor(wynikDrugaKolumna, trzeciaKolumna);
+
+            byte[] czwartaKolumna = {kluczeTablica[1][3],kluczeTablica[1][7],kluczeTablica[1][11],kluczeTablica[1][15]};
+
+            byte[] wynikCzwartaKolumna = xor(wynikTrzeciaKolumna, czwartaKolumna);
+
+            byte[] wynikowaTablica = new byte[16];
+
+            System.arraycopy(wynikPierwszaKolumna, 0, wynikowaTablica, 0, 4);
+            System.arraycopy(wynikDrugaKolumna, 0, wynikowaTablica, 4, 4);
+            System.arraycopy(wynikTrzeciaKolumna, 0, wynikowaTablica, 8, 4);
+            System.arraycopy(wynikCzwartaKolumna, 0, wynikowaTablica, 12, 4);
+
+            kluczeTablica[1] = wynikowaTablica;
+        }
+
+        return kluczeTablica;
+    }
 
     public static byte[][] UzupelnijKlucze(int dlugoscTablicy, byte[] pojedynczyKlucz){
 
         byte[][] tablicaKluczy = new byte[dlugoscTablicy][16];
 
         for(int i =0; i < dlugoscTablicy; i++){
-            tablicaKluczy[i] = pojedynczyKlucz;
+            System.arraycopy(pojedynczyKlucz, 0, tablicaKluczy[i], 0, 16);
         }
 
         return tablicaKluczy;
