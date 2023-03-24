@@ -25,32 +25,37 @@ public class AES {
             {0x36, 0x00, 0x00, 0x00}
     };
 
-    public static byte[][] kluczRunda(int numerRundy, byte[][] kluczeTablica){
+    public static byte[][] kluczRunda(byte[] klucz, int iloscRund){
 
-        if(numerRundy == 1){
-            byte[] naszaKolumna = {kluczeTablica[1][3], kluczeTablica[1][7], kluczeTablica[1][11], kluczeTablica[1][15]};
+        byte[][] tablicaZwrotna = new byte[iloscRund + 1][16];
+        System.arraycopy(klucz, 0, tablicaZwrotna[0], 0, 16);
+
+        for(int i = 0; i < iloscRund; i++) {
+
+            byte[] naszaKolumna = {tablicaZwrotna[i][3], tablicaZwrotna[i][7], tablicaZwrotna[i][11], tablicaZwrotna[i][15]};
+
 
             byte tymczasowy = naszaKolumna[3];
             naszaKolumna[3] = naszaKolumna[0];
             naszaKolumna[0] = tymczasowy; //zamieniamy 4 miejsce z 16
 
-            for(int j = 1; j < 4; j++){
+            for (int j = 1; j < 4; j++) {
                 naszaKolumna[j] = RijndaelSBox.ZnajdzWSBoxie(naszaKolumna[j]);
             }
 
-            byte[] pierwszaKolumna = {kluczeTablica[1][0], kluczeTablica[1][4], kluczeTablica[1][8], kluczeTablica[1][12]};
+            byte[] pierwszaKolumna = {tablicaZwrotna[i][0], tablicaZwrotna[i][4], tablicaZwrotna[i][8], tablicaZwrotna[i][12]};
 
-            byte[] wynikPierwszaKolumna = xor((xor(naszaKolumna, pierwszaKolumna)), Rcon[0]);
+            byte[] wynikPierwszaKolumna = xor((xor(naszaKolumna, pierwszaKolumna)), Rcon[i]);
 
-            byte[] drugaKolumna = {kluczeTablica[1][1],kluczeTablica[1][5],kluczeTablica[1][9],kluczeTablica[1][13]};
+            byte[] drugaKolumna = {tablicaZwrotna[i][1], tablicaZwrotna[i][5], tablicaZwrotna[i][9], tablicaZwrotna[i][13]};
 
             byte[] wynikDrugaKolumna = xor(wynikPierwszaKolumna, drugaKolumna);
 
-            byte[] trzeciaKolumna = {kluczeTablica[1][2],kluczeTablica[1][6],kluczeTablica[1][10],kluczeTablica[1][14]};
+            byte[] trzeciaKolumna = {tablicaZwrotna[i][2], tablicaZwrotna[i][6], tablicaZwrotna[i][10], tablicaZwrotna[i][14]};
 
             byte[] wynikTrzeciaKolumna = xor(wynikDrugaKolumna, trzeciaKolumna);
 
-            byte[] czwartaKolumna = {kluczeTablica[1][3],kluczeTablica[1][7],kluczeTablica[1][11],kluczeTablica[1][15]};
+            byte[] czwartaKolumna = {tablicaZwrotna[i][3], tablicaZwrotna[i][7], tablicaZwrotna[i][11], tablicaZwrotna[i][15]};
 
             byte[] wynikCzwartaKolumna = xor(wynikTrzeciaKolumna, czwartaKolumna);
 
@@ -61,10 +66,10 @@ public class AES {
             System.arraycopy(wynikTrzeciaKolumna, 0, wynikowaTablica, 8, 4);
             System.arraycopy(wynikCzwartaKolumna, 0, wynikowaTablica, 12, 4);
 
-            kluczeTablica[1] = wynikowaTablica;
+            tablicaZwrotna[i+1] = wynikowaTablica;
         }
 
-        return kluczeTablica;
+        return tablicaZwrotna;
     }
 
     public static byte[][] UzupelnijKlucze(int dlugoscTablicy, byte[] pojedynczyKlucz){

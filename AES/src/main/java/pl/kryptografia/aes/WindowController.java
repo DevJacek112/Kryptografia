@@ -24,12 +24,11 @@ public class WindowController {
         //System.out.println("Tekst podzielony na bloczki: ");
         //System.out.println(Arrays.deepToString(podzielone)); //podzielony tekst
 
-        byte[][] tablicaKluczy = AES.UzupelnijKlucze(podzielone.length, klucz);
         System.out.println("Tablica kluczy: ");
-        System.out.println(Arrays.deepToString(tablicaKluczy)); //przypisane klucze
+        System.out.println(Arrays.toString(klucz)); //przypisane klucze
 
-        byte[][] poRundzieJeden =  AES.kluczRunda(1, tablicaKluczy);
-        System.out.println(Arrays.deepToString(poRundzieJeden));
+        byte[][] tablicaKluczy =  AES.kluczRunda(klucz, 10);
+        System.out.println(Arrays.deepToString(tablicaKluczy));
 
         //--- tu sie zaczyna algorytm do kazdego bloczku
 //        System.out.println("");
