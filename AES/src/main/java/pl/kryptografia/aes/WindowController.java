@@ -31,14 +31,19 @@ public class WindowController {
         System.out.println(Arrays.deepToString(tablicaKluczy));
 
         //--- tu sie zaczyna algorytm do kazdego bloczku
-//        System.out.println("");
-//        System.out.println("SubBytes: ");
-//        byte[][][] zamienionyNaBajty = AES.SubBytes(podzielone);
-//        System.out.println(Arrays.deepToString(zamienionyNaBajty));
-//
-//        System.out.println("MixColumns ");
-//        byte[][][] przetasowaneKolumny = AES.shiftRows(zamienionyNaBajty);
-//        System.out.println(Arrays.deepToString(przetasowaneKolumny));
+        System.out.println("");
+        System.out.println("SubBytes: ");
+        byte[][][] zamienionyNaBajty = AES.SubBytes(podzielone);
+        System.out.println(Arrays.deepToString(zamienionyNaBajty));
+
+        System.out.println("ShiftRows ");
+        byte[][][] przetasowaneRzedy = AES.shiftRows(zamienionyNaBajty);
+        System.out.println(Arrays.deepToString(przetasowaneRzedy));
+
+        System.out.println("MixColumns");
+        byte[][][] przetasowaneKolumny = AES.mixColumns(przetasowaneRzedy);
+        System.out.println(Arrays.deepToString(przetasowaneKolumny));
+
 
 
     }

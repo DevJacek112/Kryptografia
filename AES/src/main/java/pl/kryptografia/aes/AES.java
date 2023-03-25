@@ -1,7 +1,5 @@
 package pl.kryptografia.aes;
 
-import java.util.Arrays;
-
 public class AES {
 
     public static byte[] xor(byte[] a, byte[] b) {
@@ -164,6 +162,37 @@ public class AES {
 
         }
         return  tablica;
+    }
+    public static byte[][][] mixColumns(byte[][][] tablica){
+        int[] nowaKolumna = new int[4];
+        byte b2=0x02, b3=0x03;
+        for(int i=0;i< tablica.length;i++){
+            for(int j=0;j<4;j++){
+                nowaKolumna[0] = mul(b2, tablica[i][0][j]) ^ mul(b3, tablica[i][1][j]) ^ tablica[i][2][j] ^ tablica[i][3][j];
+                nowaKolumna[1] = tablica[i][0][j] ^ mul(b2, tablica[i][1][j]) ^ mul(b3, tablica[i][2][j]) ^ tablica[i][3][j];
+                nowaKolumna[2] = tablica[i][0][j] ^ tablica[i][1][j] ^ mul(b2, tablica[i][2][j]) ^ mul(b3, tablica[i][3][j]);
+                nowaKolumna[3] = mul(b3, tablica[i][0][j]) ^ tablica[i][1][j] ^ tablica[i][2][j] ^ mul(b2, tablica[i][3][j]);
+                for(int k=0;k<4;k++)tablica[i][k][j] = (byte) nowaKolumna[k];
+            }
+        }
+        return tablica;
+    }
+
+    public static byte mul(byte a, byte b){
+        byte p = 0;
+        byte hbit = 0;
+        for (int i = 0; i < 8; i++) {
+            if ((b & 1) != 0) {
+                p ^= a;
+            }
+            hbit = (byte) (a & 0x80);
+            a <<= 1;
+            if (hbit != 0) {
+                a ^= 0x1b; //  x^8 + x^4 + x^3 + x + 1
+            }
+            b >>= 1;
+        }
+        return p;
     }
 
 }
