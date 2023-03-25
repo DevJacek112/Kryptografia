@@ -195,4 +195,25 @@ public class AES {
         return p;
     }
 
+    public static byte[][][] addRondKey(byte[][][] tablica, byte[][] klucze, int liczbaRund){
+        byte[][][] keys = new byte[liczbaRund + 1][4][4];
+        int l = 0;
+        for (int i = 0; i < liczbaRund + 1; i++) {
+            for (int j = 0; j < 4; j++) {
+                for(int k=0;k<4;k++) {
+                    keys[i][j][k] = klucze[i][l];
+                    l++;
+                }
+            }
+        }
+        for(int i=0;i<tablica.length;i++){
+            for(int j=0;j<4;j++){
+                for(int k=0;k<4;k++){
+                    tablica[i][j][k] = (byte)(tablica[i][j][k] ^ keys[i][j][k]);
+                }
+            }
+        }
+        return tablica;
+    }
+
 }
