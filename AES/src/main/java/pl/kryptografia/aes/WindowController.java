@@ -7,6 +7,8 @@ import javafx.scene.control.TextArea;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import javax.xml.bind.DatatypeConverter;
+
 public class WindowController {
 
     @FXML
@@ -16,35 +18,55 @@ public class WindowController {
     private TextField kluczPoleTekstowe;
 
     @FXML
+    private TextArea tekstWyjsciowy;
+
+    public byte[][][] tablicaDzielona;
+
+    @FXML
     protected void onSzyfrujButtonClick() {
 
-        //--- przygotowanie tekstu do dzialania na nim
+        //--- przygotowanie podstawowe
         byte[] klucz = kluczPoleTekstowe.getText().getBytes();
-        byte[][] podzielone = AES.podzielTablice(tekstJawny.getText().getBytes(StandardCharsets.UTF_8));
-        //System.out.println("Tekst podzielony na bloczki: ");
-        //System.out.println(Arrays.deepToString(podzielone)); //podzielony tekst
-
-        System.out.println("Tablica kluczy: ");
-        System.out.println(Arrays.toString(klucz)); //przypisane klucze
-
         byte[][] tablicaKluczy =  AES.kluczRunda(klucz, 10);
-        System.out.println(Arrays.deepToString(tablicaKluczy));
+        byte[][][] kluczePodzieloneNaTrzy = AES.podzielNaTrzy(tablicaKluczy);
 
-        //--- tu sie zaczyna algorytm do kazdego bloczku
-        System.out.println("");
-        System.out.println("SubBytes: ");
-        byte[][][] zamienionyNaBajty = AES.SubBytes(podzielone);
-        System.out.println(Arrays.deepToString(zamienionyNaBajty));
+        byte[][] podzielone = AES.podzielTablice(tekstJawny.getText().getBytes(StandardCharsets.UTF_8));
+        byte[][][] tablicaWynikowa = AES.podzielNaTrzy(podzielone);
 
-        System.out.println("ShiftRows ");
-        byte[][][] przetasowaneRzedy = AES.shiftRows(zamienionyNaBajty);
-        System.out.println(Arrays.deepToString(przetasowaneRzedy));
+        AES.dodajKluczRundy(tablicaWynikowa, kluczePodzieloneNaTrzy[0]);
 
-        System.out.println("MixColumns");
-        byte[][][] przetasowaneKolumny = AES.mixColumns(przetasowaneRzedy);
-        System.out.println(Arrays.deepToString(przetasowaneKolumny));
+        //9 rund
+        for(int runda = 0; runda < 9; runda++){
+            AES.SubBytes(tablicaWynikowa);
+            AES.shiftRows(tablicaWynikowa);
+            AES.mixColumns(tablicaWynikowa);
+            AES.dodajKluczRundy(tablicaWynikowa, kluczePodzieloneNaTrzy[runda + 1]);
+        }
+
+        //10 runda
+        AES.SubBytes(tablicaWynikowa);
+        AES.shiftRows(tablicaWynikowa);
+        AES.dodajKluczRundy(tablicaWynikowa, kluczePodzieloneNaTrzy[10]);
 
 
+        //wklejenie wyniku do okienka
+        String hexString = DatatypeConverter.printHexBinary(AES.zamianaNaPojedynczaTablice(tablicaWynikowa));
+        tekstWyjsciowy.setText(hexString);
+
+        tablicaDzielona = tablicaWynikowa;
+    }
+
+    @FXML
+    protected void onDeszyfrujButtonClick() {
+        //przygotowanie kluczy
+        byte[] klucz = kluczPoleTekstowe.getText().getBytes();
+        byte[][] tablicaKluczy =  AES.kluczRunda(klucz, 10);
+        byte[][][] kluczePodzieloneNaTrzy = AES.podzielNaTrzy(tablicaKluczy);
+
+        byte[][][] tablicaWynikowa = tablicaDzielona;
+
+        //odwrotnosc 10 rundy
+        AES.dodajKluczRundy(tablicaWynikowa, kluczePodzieloneNaTrzy[10]);
 
     }
 }

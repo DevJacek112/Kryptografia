@@ -1,13 +1,28 @@
 package pl.kryptografia.aes;
 
 public class AES {
-
-    public static byte[] xor(byte[] a, byte[] b) {
-        byte[] result = new byte[Math.min(a.length, b.length)];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = (byte) (a[i] ^ b[i]);
+    public static byte[][][] dodajKluczRundy(byte[][][] naszaTablica, byte[][] kluczRundy){
+        for(int i = 0; i < naszaTablica.length; i++){
+            naszaTablica[i] = xor2d(naszaTablica[i], kluczRundy);
         }
-        return result;
+
+        return naszaTablica;
+    }
+
+    public static byte[] zamianaNaPojedynczaTablice(byte[][][] originalArray) {
+        int n = originalArray.length;
+        int m = originalArray[0].length;
+        int p = originalArray[0][0].length;
+        byte[] flattenedArray = new byte[n * m * p];
+        int idx = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                for (int k = 0; k < p; k++) {
+                    flattenedArray[idx++] = originalArray[i][j][k];
+                }
+            }
+        }
+        return flattenedArray;
     }
 
     public static byte[][] Rcon = {
@@ -70,19 +85,6 @@ public class AES {
         return tablicaZwrotna;
     }
 
-    public static byte[][] UzupelnijKlucze(int dlugoscTablicy, byte[] pojedynczyKlucz){
-
-        byte[][] tablicaKluczy = new byte[dlugoscTablicy][16];
-
-        for(int i =0; i < dlugoscTablicy; i++){
-            System.arraycopy(pojedynczyKlucz, 0, tablicaKluczy[i], 0, 16);
-        }
-
-        return tablicaKluczy;
-
-    }
-
-
     public static byte[][] podzielTablice(byte[] oryginalnaTablica) {
         int liczbaKawalkow = (int) Math.ceil((double) oryginalnaTablica.length / 16); //liczba po podzieleniu przez 16, zaokraglona w gore
 
@@ -110,31 +112,29 @@ public class AES {
         return podzielonaTablica;
     }
 
-    public static byte[][][] SubBytes(byte[][] TablicaBajtow){
-
-        byte[][] przetlumaczonaTablica = new byte[TablicaBajtow.length][16];
-
-        for(int i = 0; i < TablicaBajtow.length; i++){
-            for(int j = 0; j < 15; j++){
-                przetlumaczonaTablica[i][j] = RijndaelSBox.ZnajdzWSBoxie(TablicaBajtow[i][j]); //dla kazdego bajta znajdujemy odpowiedni zamiennik w sboxie
-            }
-        }
-
-        byte[][][] podzielonaTablica = new byte[TablicaBajtow.length][4][4];
-
-        for (int i = 0; i < TablicaBajtow.length; i++){
-
-            for(int j = 0; j < 4; j++){
-
-                for(int k = 0; k < 4; k++){
-                    podzielonaTablica[i][j][k] = przetlumaczonaTablica[i][j + k];
+    public static byte[][][] podzielNaTrzy(byte[][] TablicaBajtow){
+        byte[][][] wynik = new byte[TablicaBajtow.length][4][4];
+        for (int i = 0; i < TablicaBajtow.length; i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    wynik[i][j][k] = TablicaBajtow[i][(j * 4) + k];
                 }
-
             }
+        }
+        return wynik;
+    }
 
+    public static byte[][][] SubBytes(byte[][][] TablicaBajtow){
+
+        for (int i = 0; i < TablicaBajtow.length; i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    TablicaBajtow[i][j][k] = RijndaelSBox.ZnajdzWSBoxie(TablicaBajtow[i][j][k]); //dla kazdego bajta znajdujemy odpowiedni zamiennik w sboxie
+                }
+            }
         }
 
-        return podzielonaTablica;
+        return TablicaBajtow;
     }
 
     public static byte[][][] shiftRows(byte[][][] tablica){
@@ -194,26 +194,25 @@ public class AES {
         }
         return p;
     }
-
-    public static byte[][][] addRondKey(byte[][][] tablica, byte[][] klucze, int liczbaRund){
-        byte[][][] keys = new byte[liczbaRund + 1][4][4];
-        int l = 0;
-        for (int i = 0; i < liczbaRund + 1; i++) {
-            for (int j = 0; j < 4; j++) {
-                for(int k=0;k<4;k++) {
-                    keys[i][j][k] = klucze[i][l];
-                    l++;
-                }
-            }
+    public static byte[] xor(byte[] a, byte[] b) {
+        byte[] result = new byte[Math.min(a.length, b.length)];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (byte) (a[i] ^ b[i]);
         }
-        for(int i=0;i<tablica.length;i++){
-            for(int j=0;j<4;j++){
-                for(int k=0;k<4;k++){
-                    tablica[i][j][k] = (byte)(tablica[i][j][k] ^ keys[i][j][k]);
-                }
-            }
-        }
-        return tablica;
+        return result;
     }
 
+    public static byte[][] xor2d(byte[][] a, byte[][] b) {
+        int rows = a.length;
+        int cols = a[0].length;
+        byte[][] result = new byte[rows][cols];
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                result[i][j] = (byte) (a[i][j] ^ b[i][j]);
+            }
+        }
+
+        return result;
+    }
 }

@@ -8,6 +8,7 @@ module pl.kryptografia.aes {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
+    requires java.xml.bind;
 
     opens pl.kryptografia.aes to javafx.fxml;
     exports pl.kryptografia.aes;
