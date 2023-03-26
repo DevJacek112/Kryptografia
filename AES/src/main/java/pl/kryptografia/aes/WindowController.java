@@ -52,11 +52,15 @@ public class WindowController {
         szyfruj(true, plikTablicaBajtow);
         System.out.println(Arrays.toString(plikTablicaBajtow));
         System.out.println(Arrays.deepToString(tablicaDzielona));
+        String plikDoSzyfrowania = nazwaPliku.getText() + "Zaszyfrowany";
+        ObslugaPlikow.zapiszDoPliku(tablicaDzielona, plikDoSzyfrowania, true);
     }
 
     @FXML
     protected void onDeszyfrujPlikButtonClick() {
         deszyfruj(true, tablicaDzielona);
+        String plikDoSzyfrowania = nazwaPliku.getText() + "Odszyfrowany";
+        ObslugaPlikow.zapiszDoPliku(tablicaDzielona, plikDoSzyfrowania, false);
         System.out.println(Arrays.toString(plikTablicaBajtow));
     }
 
