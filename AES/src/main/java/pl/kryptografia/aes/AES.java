@@ -137,6 +137,19 @@ public class AES {
         return TablicaBajtow;
     }
 
+    public static byte[][][] InvertSubBytes(byte[][][] TablicaBajtow){
+
+        for (int i = 0; i < TablicaBajtow.length; i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < 4; k++) {
+                    TablicaBajtow[i][j][k] = RijndaelSBox.ZnajdzWOdwroconymSBoxie(TablicaBajtow[i][j][k]); //dla kazdego bajta znajdujemy odpowiedni zamiennik w sboxie
+                }
+            }
+        }
+
+        return TablicaBajtow;
+    }
+
     public static byte[][][] shiftRows(byte[][][] tablica){
 
         for(int k = 0; k < tablica.length; k++){

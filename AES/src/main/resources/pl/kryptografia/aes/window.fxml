@@ -4,20 +4,121 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.kryptografia.aes.WindowController">
+<VBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefWidth="1000.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.kryptografia.aes.WindowController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj klucz" />
-    <TextField fx:id="kluczPoleTekstowe" text="\$B&amp;E)H@McQfTjWnZ" />
-    <Button mnemonicParsing="false" text="Generuj losowy klucz" />
-    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj tekst, który chcesz szyfrować/deszyfrować" />
-    <TextArea fx:id="tekstJawny" prefHeight="200.0" prefWidth="200.0" text="Jestem Polakiem z korzeniem z Afryki Choć nigdy nie byłem tam Znam oryginalne leczenia techniki Dyplom kupiłem, to mam" />
-    <Button mnemonicParsing="false" onAction="#onSzyfrujButtonClick" text="Szyfruj" />
-    <Button mnemonicParsing="false" onAction="#onDeszyfrujButtonClick" text="Deszyfruj" />
-    <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wyjście" />
-    <TextArea fx:id="tekstWyjsciowy" prefHeight="200.0" prefWidth="200.0" />
+   <GridPane alignment="CENTER">
+     <columnConstraints>
+       <ColumnConstraints hgrow="SOMETIMES" maxWidth="916.0" minWidth="10.0" prefWidth="916.0" />
+       <ColumnConstraints hgrow="SOMETIMES" maxWidth="525.0" minWidth="10.0" prefWidth="144.0" />
+     </columnConstraints>
+     <rowConstraints>
+       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+     </rowConstraints>
+      <children>
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jacek Teodorczyk 242553" textAlignment="RIGHT" wrappingWidth="140.0" GridPane.columnIndex="1" />
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Jakub Świerczyński 242552" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Aplikacja szyfrująca i deszyfrująca bazująca na algorytmie AES">
+            <font>
+               <Font size="18.0" />
+            </font>
+         </Text>
+      </children>
+   </GridPane>
+   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+      <children>
+         <VBox alignment="CENTER" prefHeight="500.0" prefWidth="500.0">
+            <children>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj klucz" />
+                <TextField fx:id="kluczPoleTekstowe" text="\$B&amp;E)H@McQfTjWnZ" />
+                <Button mnemonicParsing="false" text="Generuj klucz">
+                  <VBox.margin>
+                     <Insets top="10.0" />
+                  </VBox.margin></Button>
+               <HBox prefHeight="100.0" prefWidth="200.0">
+                  <children>
+                     <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0">
+                        <children>
+                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj tekst, który chcesz szyfrować">
+                              <VBox.margin>
+                                 <Insets bottom="5.0" top="10.0" />
+                              </VBox.margin></Text>
+                            <TextArea fx:id="tekstJawny" prefHeight="200.0" prefWidth="200.0" text="Jestem Polakiem z korzeniem z Afryki Choć nigdy nie byłem tam Znam oryginalne leczenia techniki Dyplom kupiłem, to mam" wrapText="true" />
+                            <Button mnemonicParsing="false" onAction="#onSzyfrujButtonClick" text="Szyfruj">
+                              <VBox.margin>
+                                 <Insets top="10.0" />
+                              </VBox.margin></Button>
+                            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wyjście">
+                              <VBox.margin>
+                                 <Insets bottom="5.0" top="20.0" />
+                              </VBox.margin>
+                           </Text>
+                            <TextArea fx:id="tekstWyjsciowySzyfrowanie" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+                        </children>
+                        <HBox.margin>
+                           <Insets right="30.0" />
+                        </HBox.margin>
+                     </VBox>
+                     <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0">
+                        <children>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj tekst który chcesz deszyfrować">
+                              <VBox.margin>
+                                 <Insets bottom="5.0" top="10.0" />
+                              </VBox.margin></Text>
+                           <TextArea fx:id="tekstDoDeszyfrowania" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+                            <Button mnemonicParsing="false" onAction="#onDeszyfrujButtonClick" text="Deszyfruj">
+                              <VBox.margin>
+                                 <Insets top="10.0" />
+                              </VBox.margin></Button>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wyjście">
+                              <VBox.margin>
+                                 <Insets bottom="5.0" top="20.0" />
+                              </VBox.margin>
+                           </Text>
+                           <TextArea fx:id="tekstWyjsciowyDeszyfrowanie" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+                        </children>
+                        <HBox.margin>
+                           <Insets left="30.0" />
+                        </HBox.margin>
+                     </VBox>
+                  </children>
+               </HBox>
+            </children>
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+         </VBox>
+      </children>
+   </HBox>
+   <VBox alignment="CENTER">
+      <children>
+         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nazwę pliku (bez rozszerzenia)" />
+         <TextArea fx:id="nazwaPliku" prefHeight="8.0" prefWidth="200.0" />
+         <Button mnemonicParsing="false" onAction="#onWczytajPlikButtonClick" text="Wczytaj z pliku o podanej powyżej nazwie">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+         </Button>
+         <Button mnemonicParsing="false" onAction="#onSzyfrujPlikButtonClick" text="Szyfruj Plik">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+         </Button>
+         <Button mnemonicParsing="false" onAction="#onDeszyfrujPlikButtonClick" text="Deszyfruj plik">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+         </Button>
+      </children>
+   </VBox>
 </VBox>
