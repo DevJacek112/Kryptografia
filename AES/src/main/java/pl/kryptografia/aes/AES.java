@@ -215,4 +215,28 @@ public class AES {
 
         return result;
     }
+
+    public static byte[][][] invertShiftRows(byte[][][] tablica){
+
+        for(int k = 0; k < tablica.length; k++){
+            for(int i=1;i<4;i++) {
+                //kopia rzędu
+                byte[] pom = new byte[4];
+                for (int j = 0; j < 4; j++) {
+                    pom[j] = tablica[k][i][j];
+                }
+                //pierwszy element rzędu
+                byte tmp = tablica[k][i][0];
+                //wzór [i][j+i%4]
+                for (int j = 1; j < 4; j++) {
+                    int modulo = (j + i) % 4;
+                    tablica[k][i][modulo] = pom[j];
+                }
+                //wstawienie pierwszego elementu na odpowiednie miejsce
+                tablica[k][i][i] = tmp;
+            }
+
+        }
+        return  tablica;
+    }
 }
