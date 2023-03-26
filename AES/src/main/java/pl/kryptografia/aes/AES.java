@@ -239,4 +239,19 @@ public class AES {
         }
         return  tablica;
     }
+
+    public static byte[][][] invertMixColumns(byte[][][] tablica){
+        int[] nowaKolumna = new int[4];
+        byte b2=0x0e, b3=0x0b, b4=0xd, b5=0x09;
+        for(int i=0;i< tablica.length;i++){
+            for(int j=0;j<4;j++){
+                nowaKolumna[0] = mul(b2, tablica[i][0][j]) ^ mul(b3, tablica[i][1][j]) ^ mul(b4, tablica[i][2][j]) ^ mul(b5, tablica[i][3][j]);
+                nowaKolumna[1] = mul(b5, tablica[i][0][j]) ^ mul(b2, tablica[i][1][j]) ^ mul(b3, tablica[i][2][j]) ^ mul(b4, tablica[i][3][j]);
+                nowaKolumna[2] = mul(b4, tablica[i][0][j]) ^ mul(b5, tablica[i][1][j]) ^ mul(b2, tablica[i][2][j]) ^ mul(b3, tablica[i][3][j]);
+                nowaKolumna[3] = mul(b3, tablica[i][0][j]) ^ mul(b4, tablica[i][1][j]) ^ mul(b5, tablica[i][2][j]) ^ mul(b2, tablica[i][3][j]);
+                for(int k=0;k<4;k++)tablica[i][k][j] = (byte) nowaKolumna[k];
+            }
+        }
+        return tablica;
+    }
 }
