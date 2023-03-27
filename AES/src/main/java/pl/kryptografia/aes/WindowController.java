@@ -1,12 +1,14 @@
 package pl.kryptografia.aes;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Random;
 
 import javax.xml.bind.DatatypeConverter;
 
@@ -30,6 +32,8 @@ public class WindowController {
     @FXML
     private TextArea nazwaPliku;
 
+    private boolean czyWczytanoPlik=false;
+
     public byte[][][] tablicaDzielona;
     byte[] plikTablicaBajtow;
 
@@ -45,21 +49,55 @@ public class WindowController {
 
     @FXML
     protected void onWczytajPlikButtonClick() throws IOException {
-        plikTablicaBajtow = ObslugaPlikow.pobierzPlikIZamienNaTabliceBajtow(nazwaPliku.getText());
+        if(nazwaPliku.getText() == ""){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Nie podano nazwy pliku");
+            alert.showAndWait();
+        } else {
+            plikTablicaBajtow = ObslugaPlikow.pobierzPlikIZamienNaTabliceBajtow(nazwaPliku.getText());
+            czyWczytanoPlik = true;
+        }
     }
 
     @FXML
     protected void onSzyfrujPlikButtonClick() {
-        szyfruj(true, plikTablicaBajtow);
-        String plikDoSzyfrowania = nazwaPliku.getText() + "Zaszyfrowany";
-        ObslugaPlikow.zapiszDoPliku(tablicaDzielona, plikDoSzyfrowania);
+        if (!czyWczytanoPlik){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Nie wczytano pliku!");
+            alert.showAndWait();
+        } else {
+            szyfruj(true, plikTablicaBajtow);
+            String plikDoSzyfrowania = nazwaPliku.getText() + "Zaszyfrowany";
+            ObslugaPlikow.zapiszDoPliku(tablicaDzielona, plikDoSzyfrowania);
+        }
     }
 
     @FXML
     protected void onDeszyfrujPlikButtonClick() {
-        deszyfruj(true, AES.podzielNaTrzy(AES.podzielTablice(plikTablicaBajtow)));
-        String plikDoSzyfrowania = nazwaPliku.getText() + "Odszyfrowany";
-        ObslugaPlikow.zapiszDoPliku(AES.podzielNaTrzy(AES.podzielTablice(plikTablicaBajtow)), plikDoSzyfrowania);
+        if (!czyWczytanoPlik){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setHeaderText("Nie wczytano pliku!");
+            alert.showAndWait();
+        } else if (nazwaPliku.getText().contains("Zaszyfrowany") == false) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Nie wczytano zaszyfrowanego pliku");
+            alert.showAndWait();
+        } else {
+            deszyfruj(true, AES.podzielNaTrzy(AES.podzielTablice(plikTablicaBajtow)));
+            String plikDoSzyfrowania = nazwaPliku.getText() + "Odszyfrowany";
+            ObslugaPlikow.zapiszDoPliku(AES.podzielNaTrzy(AES.podzielTablice(plikTablicaBajtow)), plikDoSzyfrowania);
+        }
+    }
+
+    @FXML
+    public void onGenerujKluczButtonClick() {
+        Random random = new Random();
+        StringBuilder stringBuilder = new StringBuilder();
+        for(int i=0;i<16;i++){
+            int pom = random.nextInt(126 - 33) + 33;
+            stringBuilder.append((char)pom);
+        }
+        kluczPoleTekstowe.setText(stringBuilder.toString());
     }
 
     public void szyfruj(boolean czyPlik, byte[] przekazanaTablica){
