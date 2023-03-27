@@ -1,48 +1,27 @@
 package pl.kryptografia.aes;
-
-import javax.xml.bind.DatatypeConverter;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 public class ObslugaPlikow {
 
-    public static byte[] pobierzPlikIZamienNaTabliceBajtow(String nazwaPliku){
-
-        String fileName = nazwaPliku;
-        File file = new File(fileName);
-        byte[] fileContent = new byte[(int)file.length()];
-
-        try {
-            FileInputStream inputStream = new FileInputStream(file);
-            inputStream.read(fileContent);
-            inputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return fileContent;
+    public static byte[] pobierzPlikIZamienNaTabliceBajtow(String nazwaPliku) throws IOException {
+        File file = new File(nazwaPliku);
+        FileInputStream fis = new FileInputStream(file);
+        byte[] bytesArray = new byte[(int) file.length()];
+        fis.read(bytesArray);
+        fis.close();
+        return bytesArray;
     }
 
-    public static void zapiszDoPliku(byte[][][] tablica, String nazwaPliku, boolean zaszyfrowane){
-        String hexString = "";
-        if(zaszyfrowane) {
-            hexString = DatatypeConverter.printHexBinary(AES.zamianaNaPojedynczaTablice(tablica));
-            try {
-                FileWriter fileWriter = new FileWriter(nazwaPliku);
-                fileWriter.write(hexString);
-                fileWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        else  {
-            String text = new String(AES.zamianaNaPojedynczaTablice(tablica),StandardCharsets.UTF_8);
-            try {
-                FileWriter fileWriter = new FileWriter(nazwaPliku);
-                fileWriter.write(text);
-                fileWriter.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+    public static void zapiszDoPliku(byte[][][] tablica, String nazwaPliku){
+        byte[] bajty;
+        bajty = AES.zamianaNaPojedynczaTablice(tablica);
+        try {
+            FileOutputStream fos = new FileOutputStream(nazwaPliku);
+            fos.write(bajty);
+            fos.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

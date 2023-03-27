@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -43,25 +44,22 @@ public class WindowController {
     }
 
     @FXML
-    protected void onWczytajPlikButtonClick() {
+    protected void onWczytajPlikButtonClick() throws IOException {
         plikTablicaBajtow = ObslugaPlikow.pobierzPlikIZamienNaTabliceBajtow(nazwaPliku.getText());
     }
 
     @FXML
     protected void onSzyfrujPlikButtonClick() {
         szyfruj(true, plikTablicaBajtow);
-        System.out.println(Arrays.toString(plikTablicaBajtow));
-        System.out.println(Arrays.deepToString(tablicaDzielona));
         String plikDoSzyfrowania = nazwaPliku.getText() + "Zaszyfrowany";
-        ObslugaPlikow.zapiszDoPliku(tablicaDzielona, plikDoSzyfrowania, true);
+        ObslugaPlikow.zapiszDoPliku(tablicaDzielona, plikDoSzyfrowania);
     }
 
     @FXML
     protected void onDeszyfrujPlikButtonClick() {
-        deszyfruj(true, tablicaDzielona);
+        deszyfruj(true, AES.podzielNaTrzy(AES.podzielTablice(plikTablicaBajtow)));
         String plikDoSzyfrowania = nazwaPliku.getText() + "Odszyfrowany";
-        ObslugaPlikow.zapiszDoPliku(tablicaDzielona, plikDoSzyfrowania, false);
-        System.out.println(Arrays.toString(plikTablicaBajtow));
+        ObslugaPlikow.zapiszDoPliku(AES.podzielNaTrzy(AES.podzielTablice(plikTablicaBajtow)), plikDoSzyfrowania);
     }
 
     public void szyfruj(boolean czyPlik, byte[] przekazanaTablica){
@@ -121,15 +119,16 @@ public class WindowController {
         AES.dodajKluczRundy(przekazanaTablica, kluczePodzieloneNaTrzy[0]);
         byte[] zamieniona = AES.zamianaNaPojedynczaTablice(przekazanaTablica);
 
-        //usuwanie zbednych pozycji
-        byte[] ucieta = new byte[zamieniona.length - (16 + zamieniona[zamieniona.length-16])]; //zamieniona[zamieniona.length-16] to wartosc ile do usuniecia
-        System.arraycopy(zamieniona, 0, ucieta, 0, ucieta.length);
-
+        //usuwanie zbednych pozycji w przypadku tekstu okienkowego
         if(!czyPlik){
+            byte[] ucieta = new byte[zamieniona.length - (16 + zamieniona[zamieniona.length-16])]; //zamieniona[zamieniona.length-16] to wartosc ile do usuniecia
+            System.arraycopy(zamieniona, 0, ucieta, 0, ucieta.length);
             tekstWyjsciowyDeszyfrowanie.setText(new String(ucieta, StandardCharsets.UTF_8));
         }
+
+        //brak dzialania w przypadku pliku
         if(czyPlik){
-            plikTablicaBajtow = ucieta;
+            plikTablicaBajtow = zamieniona;
         }
 
     }
