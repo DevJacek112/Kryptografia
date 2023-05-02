@@ -42,6 +42,14 @@ public class ElGamalWindowController {
     @FXML
     protected void onGenerujButtonClick() {
         BigInteger p = ElGamal.generateP();
+        BigInteger g = ElGamal.findGInRange(p);
+        kluczPublicznyg.setText(g.toString());
+
+        BigInteger A = ElGamal.findGInRange(p);
+        kluczPrywatnya.setText(A.toString());
+
+        BigInteger h = ElGamal.calculateH(g, A, p);
+        kluczPublicznyh.setText(h.toString());
     }
 
 
