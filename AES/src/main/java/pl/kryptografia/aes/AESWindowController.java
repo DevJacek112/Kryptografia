@@ -7,12 +7,11 @@ import javafx.scene.control.TextArea;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.Random;
 
 import javax.xml.bind.DatatypeConverter;
 
-public class WindowController {
+public class AESWindowController {
 
     @FXML
     private TextArea tekstJawny;

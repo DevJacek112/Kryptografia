@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefWidth="1000.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.kryptografia.aes.WindowController">
+<VBox alignment="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefWidth="1000.0" spacing="20.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.kryptografia.aes.AESWindowController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>

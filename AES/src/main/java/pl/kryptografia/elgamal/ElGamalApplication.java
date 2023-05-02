@@ -1,4 +1,4 @@
-package pl.kryptografia.aes;
+package pl.kryptografia.elgamal;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -6,12 +6,13 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class Application extends javafx.application.Application {
+public class ElGamalApplication extends javafx.application.Application {
+
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("window.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(ElGamalApplication.class.getResource("elgamalWindow.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("AES");
+        stage.setTitle("ElGamalSign");
         stage.setScene(scene);
         stage.show();
     }
@@ -19,4 +20,5 @@ public class Application extends javafx.application.Application {
     public static void main(String[] args) {
         launch();
     }
+
 }
