@@ -58,7 +58,7 @@
                                         <Insets bottom="5.0" top="10.0" />
                                     </VBox.margin></Text>
                                 <TextArea fx:id="tekstJawny" prefHeight="200.0" prefWidth="200.0" text="Jestem Polakiem z korzeniem z Afryki Choć nigdy nie byłem tam Znam oryginalne leczenia techniki Dyplom kupiłem, to mam" wrapText="true" />
-                                <Button mnemonicParsing="false" text="Podpisz">
+                                <Button mnemonicParsing="false" onAction="#onPodpiszButtonClick" text="Podpisz">
                                     <VBox.margin>
                                         <Insets top="10.0" />
                                     </VBox.margin></Button>

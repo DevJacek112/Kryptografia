@@ -39,17 +39,30 @@ public class ElGamalWindowController {
     @FXML
     private TextArea tekstWyjsciowySzyfrowanie;
 
+    private BigInteger p = ElGamal.generateP();
+    private BigInteger g = ElGamal.findGInRange(p);
+    private BigInteger A = ElGamal.findGInRange(p);
+    private BigInteger h = ElGamal.calculateH(g, A, p);
+
     @FXML
     protected void onGenerujButtonClick() {
-        BigInteger p = ElGamal.generateP();
-        BigInteger g = ElGamal.findGInRange(p);
+//        BigInteger p = ElGamal.generateP();
+//        BigInteger g = ElGamal.findGInRange(p);
         kluczPublicznyg.setText(g.toString());
 
-        BigInteger A = ElGamal.findGInRange(p);
+//        BigInteger A = ElGamal.findGInRange(p);
         kluczPrywatnya.setText(A.toString());
 
-        BigInteger h = ElGamal.calculateH(g, A, p);
+//        BigInteger h = ElGamal.calculateH(g, A, p);
         kluczPublicznyh.setText(h.toString());
+    }
+
+    @FXML
+    protected void onPodpiszButtonClick() {
+        BigInteger[] pom=ElGamal.podpis(tekstJawny.getText(), A);
+        String tmp = pom[0].toString();
+        String tmp2 = pom[1].toString();
+        tekstDoDeszyfrowania.setText(tmp+"\n"+tmp2);
     }
 
 
