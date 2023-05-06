@@ -80,7 +80,7 @@
                                         <Insets bottom="5.0" top="10.0" />
                                     </VBox.margin></Text>
                                 <TextArea fx:id="tekstDoDeszyfrowania" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
-                                <Button mnemonicParsing="false" text="Weryfikuj">
+                                <Button mnemonicParsing="false" onAction="#onDeszyfrujButtonClick" text="Weryfikuj">
                                     <VBox.margin>
                                         <Insets top="10.0" />
                                     </VBox.margin></Button>
