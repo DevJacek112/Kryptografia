@@ -68,6 +68,17 @@ public class ElGamalWindowController {
     @FXML
     protected void onDeszyfrujButtonClick() {
         System.out.println("test");
+        Boolean czyZgodny = ElGamal.weryfikacja(tekstJawny.getText(),tekstDoDeszyfrowania.getText());
+        if(czyZgodny){
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setHeaderText("Podpis jest prawidłowy");
+            alert.showAndWait();
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setHeaderText("Podpis nie jest prawidłowy");
+            alert.showAndWait();
+        }
         // System.out.println(ElGamal.byteArrayToString(ElGamal.decrypt(A, p)));
         //tekstWyjsciowySzyfrowanie.setText(ElGamal.decrypt(tekstWyjsciowyDeszyfrowanie.getText(), A, p));
     }

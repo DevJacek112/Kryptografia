@@ -89,12 +89,30 @@ public class ElGamal {
         do {
             r = new BigInteger(pMinusJeden.bitLength(), rand); // losowa liczba o takiej samej długości w bitach jak pMinusJeden
         } while (r.compareTo(BigInteger.ZERO) == 0 || r.compareTo(pMinusJeden) >= 0 || !r.gcd(pMinusJeden).equals(BigInteger.ONE)); // jeśli wynik jest zerem, większy niż pMinusJeden lub nie jest względnie pierwszy z pMinusJeden, to losuj dalej
-        s1 = A.modPow(r, p);
+        s1 = g.modPow(r, p);
         rPrim = r.modInverse(pMinusJeden);
         s2 = ((hasz.subtract(kluczPrywatnyA.multiply(s1))).multiply(rPrim)).mod(pMinusJeden);
         podpis[0] = s1;
         podpis[1] = s2;
         podpisBufor = podpis;
         return podpis;
+    }
+
+    public static boolean weryfikacja(String wiadomosc, String podpis){
+        MessageDigest messageDigest = null;
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        messageDigest.update(wiadomosc.getBytes());
+        BigInteger hash = new BigInteger(1, messageDigest.digest());
+        String tab[]=podpis.split("\n");
+        BigInteger S1=new BigInteger(1,tab[0].getBytes());
+        BigInteger S2=new BigInteger(1,tab[1].getBytes());
+        BigInteger wynik1=g.modPow(hash, p);
+        BigInteger wynik2=h.modPow(S1, p).multiply(S1.modPow(S2, p)).mod(p);
+        if(wynik1.compareTo(wynik2)==0)return true;
+        else return false;
     }
 }
