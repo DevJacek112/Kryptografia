@@ -1,6 +1,8 @@
 package pl.kryptografia.elgamal;
 
-import java.io.ByteArrayOutputStream;
+import pl.kryptografia.aes.AES;
+
+import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -18,9 +20,10 @@ public class ElGamal {
     private static BigInteger h;
 
     public static BigInteger podpisBufor[];
+    static int keyLen=512;
 
     public static BigInteger generateP(){
-        int bitLength = 2048;
+        int bitLength = 512;
         int certainty = 100;
         BigInteger prime = new BigInteger(bitLength, certainty, new SecureRandom());
         p = prime;
@@ -41,8 +44,6 @@ public class ElGamal {
         if (res.compareTo(bigInteger) >= 0)
             res = res.mod(bigInteger).add(min);
 
-        //System.out.println("The random BigInteger = \n"+res);
-        //System.out.println("max is = \n"+max);
         g = res;
         return res;
     }
@@ -61,8 +62,6 @@ public class ElGamal {
         if (res.compareTo(bigInteger) >= 0)
             res = res.mod(bigInteger).add(min);
 
-        //System.out.println("The random BigInteger = \n"+res);
-        //System.out.println("max is = \n"+max);
         A = res;
         return res;
     }
@@ -73,7 +72,7 @@ public class ElGamal {
         return pom;
     }
 
-    public static BigInteger[] podpis(String wiadomosc, BigInteger kluczPrywatnyA){
+    public static BigInteger[] podpis(byte[] wiadomosc, BigInteger kluczPrywatnyA){
         BigInteger s1, s2, r, rPrim, hasz;
         BigInteger[] podpis = new BigInteger[2];
         MessageDigest messageDigest = null;
@@ -82,13 +81,14 @@ public class ElGamal {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        messageDigest.update(wiadomosc.getBytes());
+//        if (!czyPlik) messageDigest.update(wiadomosc.getBytes());
+        messageDigest.update(wiadomosc);
         hasz = new BigInteger(1, messageDigest.digest());
-        Random rand = new Random();
         BigInteger pMinusJeden = p.subtract(BigInteger.ONE);
-        do {
-            r = new BigInteger(pMinusJeden.bitLength(), rand); // losowa liczba o takiej samej długości w bitach jak pMinusJeden
-        } while (r.compareTo(BigInteger.ZERO) == 0 || r.compareTo(pMinusJeden) >= 0 || !r.gcd(pMinusJeden).equals(BigInteger.ONE)); // jeśli wynik jest zerem, większy niż pMinusJeden lub nie jest względnie pierwszy z pMinusJeden, to losuj dalej
+        r = BigInteger.probablePrime(keyLen,new Random());
+        while(true)
+            if (r.gcd(pMinusJeden).equals(BigInteger.ONE))break;
+            else r=r.nextProbablePrime(); // jeśli wynik jest zerem, większy niż pMinusJeden lub nie jest względnie pierwszy z pMinusJeden, to losuj dalej
         s1 = g.modPow(r, p);
         rPrim = r.modInverse(pMinusJeden);
         s2 = ((hasz.subtract(kluczPrywatnyA.multiply(s1))).multiply(rPrim)).mod(pMinusJeden);
@@ -98,21 +98,44 @@ public class ElGamal {
         return podpis;
     }
 
-    public static boolean weryfikacja(String wiadomosc, String podpis){
+    public static boolean weryfikacja(byte[] wiadomosc){
         MessageDigest messageDigest = null;
         try {
             messageDigest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-        messageDigest.update(wiadomosc.getBytes());
+        messageDigest.update(wiadomosc);
         BigInteger hash = new BigInteger(1, messageDigest.digest());
-        String tab[]=podpis.split("\n");
-        BigInteger S1=new BigInteger(1,tab[0].getBytes());
-        BigInteger S2=new BigInteger(1,tab[1].getBytes());
+        BigInteger S1=podpisBufor[0];
+        BigInteger S2=podpisBufor[1];
         BigInteger wynik1=g.modPow(hash, p);
         BigInteger wynik2=h.modPow(S1, p).multiply(S1.modPow(S2, p)).mod(p);
-        if(wynik1.compareTo(wynik2)==0)return true;
-        else return false;
+        if (wynik1.compareTo(wynik2) == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
+
+    public static byte[] pobierzPlikIZamienNaTabliceBajtow(String nazwaPliku) throws IOException {
+        File file = new File(nazwaPliku);
+        FileInputStream fis = new FileInputStream(file);
+        byte[] bytesArray = new byte[(int) file.length()];
+        fis.read(bytesArray);
+        fis.close();
+        return bytesArray;
+    }
+
+    public static void zapiszDoPliku(byte[] tablica, String nazwaPliku){
+        try {
+            FileOutputStream fos = new FileOutputStream(nazwaPliku);
+            fos.write(tablica);
+            fos.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
 }

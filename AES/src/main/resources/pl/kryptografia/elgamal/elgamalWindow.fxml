@@ -49,7 +49,7 @@
                     <VBox.margin>
                         <Insets top="10.0" />
                     </VBox.margin></Button>
-                <HBox prefHeight="100.0" prefWidth="200.0">
+                <HBox prefHeight="384.0" prefWidth="1015.0">
                     <children>
                         <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0">
                             <children>
@@ -62,20 +62,14 @@
                                     <VBox.margin>
                                         <Insets top="10.0" />
                                     </VBox.margin></Button>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wyjście">
-                                    <VBox.margin>
-                                        <Insets bottom="5.0" top="20.0" />
-                                    </VBox.margin>
-                                </Text>
-                                <TextArea fx:id="tekstWyjsciowySzyfrowanie" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
                             </children>
                             <HBox.margin>
                                 <Insets right="30.0" />
                             </HBox.margin>
                         </VBox>
-                        <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0">
+                        <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="485.0" prefWidth="500.0">
                             <children>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj tekst który chcesz zweryfikować">
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podpisana wiadomość">
                                     <VBox.margin>
                                         <Insets bottom="5.0" top="10.0" />
                                     </VBox.margin></Text>
@@ -84,12 +78,6 @@
                                     <VBox.margin>
                                         <Insets top="10.0" />
                                     </VBox.margin></Button>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Czy jest w porządku">
-                                    <VBox.margin>
-                                        <Insets bottom="5.0" top="20.0" />
-                                    </VBox.margin>
-                                </Text>
-                                <TextArea fx:id="tekstWyjsciowyDeszyfrowanie" editable="false" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
                             </children>
                             <HBox.margin>
                                 <Insets left="30.0" />
@@ -108,21 +96,23 @@
     <children>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nazwę pliku (bez rozszerzenia)" />
         <TextArea fx:id="nazwaPliku" prefHeight="8.0" prefWidth="200.0" />
-        <Button mnemonicParsing="false" text="Wczytaj z pliku o podanej powyżej nazwie">
+        <Button mnemonicParsing="false" onAction="#onWczytajPlikButtonClick" text="Wczytaj z pliku o podanej powyżej nazwie">
             <VBox.margin>
                 <Insets top="10.0" />
             </VBox.margin>
         </Button>
-        <Button mnemonicParsing="false" text="Podpisz Plik">
+        <Button mnemonicParsing="false" onAction="#onPodpiszPlikButtonClick" text="Podpisz Plik">
             <VBox.margin>
                 <Insets top="10.0" />
             </VBox.margin>
         </Button>
-        <Button mnemonicParsing="false" text="Weryfikuj plik">
+        <Button mnemonicParsing="false" onAction="#onWeryfikujPlikButtonClick" text="Weryfikuj plik">
             <VBox.margin>
                 <Insets top="10.0" />
             </VBox.margin>
         </Button>
+         <Button mnemonicParsing="false" onAction="#onZapiszKluczeButtonClick" text="Zapisz klucze" />
+         <Button mnemonicParsing="false" onAction="#onWczytajKluczeButtonClick" text="Wczytaj klucze" />
     </children>
 </VBox>
 </VBox>
