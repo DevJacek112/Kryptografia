@@ -2,19 +2,16 @@ package pl.kryptografia.elgamal;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Random;
-
-import javax.xml.bind.DatatypeConverter;
 
 
 public class ElGamalWindowController {
+
 
     @FXML
     private TextField kluczPrywatnya;
@@ -29,16 +26,16 @@ public class ElGamalWindowController {
     private TextArea nazwaPliku;
 
     @FXML
+    private TextArea nazwaPliku1;
+
+    @FXML
     private TextArea tekstDoDeszyfrowania;
 
     @FXML
     private TextArea tekstJawny;
 
     @FXML
-    private TextArea tekstWyjsciowyDeszyfrowanie;
-
-    @FXML
-    private TextArea tekstWyjsciowySzyfrowanie;
+    private TextField wartoscP;
 
     private BigInteger p;
     private BigInteger g;
@@ -46,11 +43,15 @@ public class ElGamalWindowController {
     private BigInteger h;
     private byte[] plik;
 
+    private BigInteger[] podpis;
+
     private BigInteger APlik;
 
     @FXML
     protected void onGenerujButtonClick() {
         p = ElGamal.generateP();
+        wartoscP.setText(p.toString());
+
         g = ElGamal.findGInRange(p);
         kluczPublicznyg.setText(g.toString());
 
@@ -85,13 +86,8 @@ public class ElGamalWindowController {
     }
 
     @FXML
-    protected void onZapiszKluczeButtonClick(){
-
-    }
-
-    @FXML
-    protected void onWczytajKluczeButtonClick(){
-
+    protected void onWczytajPodpisZPliku() throws IOException {
+        podpis = ElGamal.wczytajPodpisZPliku(nazwaPliku1.getText());
     }
 
     @FXML
@@ -100,14 +96,22 @@ public class ElGamalWindowController {
     }
 
     @FXML
-    protected void onPodpiszPlikButtonClick(){
+    protected void onPodpiszPlikButtonClick() throws FileNotFoundException {
         BigInteger[] tmp = ElGamal.podpis(plik, A);
-        String zapis = nazwaPliku.getText() + "Podpisany";
-        ElGamal.zapiszDoPliku(Arrays.toString(tmp).getBytes(),zapis);
+        String zapis = nazwaPliku.getText() + "Podpis";
+        //System.out.println(Arrays.toString(tmp));
+        //ElGamal.zapiszDoPliku(Arrays.toString(tmp).getBytes(),zapis);
+        ElGamal.zapiszPodpisDoPliku(tmp, zapis);
     }
 
     @FXML
     protected void onWeryfikujPlikButtonClick(){
+
+        ElGamal.setA(new BigInteger(kluczPrywatnya.getText()));
+        ElGamal.setG(new BigInteger(kluczPublicznyg.getText()));
+        ElGamal.setH(new BigInteger(kluczPublicznyh.getText()));
+        ElGamal.setP(new BigInteger(wartoscP.getText()));
+
         boolean weryfikacjaPliku = ElGamal.weryfikacja(plik);
         if(weryfikacjaPliku){
             Alert alert = new Alert(Alert.AlertType.INFORMATION);

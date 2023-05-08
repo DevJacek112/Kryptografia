@@ -1,13 +1,10 @@
 package pl.kryptografia.elgamal;
 
-import pl.kryptografia.aes.AES;
-
 import java.io.*;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Base64;
 import java.util.Random;
 
 public class ElGamal {
@@ -19,8 +16,24 @@ public class ElGamal {
 
     private static BigInteger h;
 
-    public static BigInteger podpisBufor[];
+    public static BigInteger[] podpisBufor;
     static int keyLen=512;
+
+    public static void setG(BigInteger g) {
+        ElGamal.g = g;
+    }
+
+    public static void setA(BigInteger a) {
+        A = a;
+    }
+
+    public static void setH(BigInteger h) {
+        ElGamal.h = h;
+    }
+
+    public static void setP(BigInteger p) {
+        ElGamal.p = p;
+    }
 
     public static BigInteger generateP(){
         int bitLength = 512;
@@ -51,7 +64,7 @@ public class ElGamal {
     public static BigInteger findAInRange(BigInteger max){
 
         BigInteger min = new BigInteger("1");
-        max = max.subtract(new BigInteger("1")); //wykald mowi ze ma byc p - 1, chatbot, ze -2, zobaczymy ktory bedzie dzialac (mam nadzieje, ze ktorys bedzie), jesli zostanie -1 to mozna uzyc funkcji powyzej, zamiast dublowac kod
+        max = max.subtract(new BigInteger("1"));
 
         BigInteger bigInteger = max.subtract(min);
         Random randNum = new Random();
@@ -127,15 +140,42 @@ public class ElGamal {
         return bytesArray;
     }
 
-    public static void zapiszDoPliku(byte[] tablica, String nazwaPliku){
-        try {
-            FileOutputStream fos = new FileOutputStream(nazwaPliku);
-            fos.write(tablica);
-            fos.close();
+    public static void zapiszPodpisDoPliku(BigInteger[] podpis, String nazwaPliku) throws FileNotFoundException {
+        try (DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(nazwaPliku))) {
+            outputStream.writeInt(podpis.length);
+
+            for (BigInteger bigInteger : podpis) {
+                byte[] bajty = bigInteger.toByteArray();
+                outputStream.writeInt(bajty.length);
+                outputStream.write(bajty);
+            }
+
+            //System.out.println("Zapisano do pliku tablicę BigIntiger: " + Arrays.toString(podpis));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
+    public static BigInteger[] wczytajPodpisZPliku(String nazwaPliku) throws FileNotFoundException {
+        try (DataInputStream inputStream = new DataInputStream(new FileInputStream(nazwaPliku))) {
+            int liczbaBajtow = inputStream.readInt();
+            BigInteger[] podpis = new BigInteger[liczbaBajtow];
+
+            for (int i = 0; i < liczbaBajtow; i++) {
+                int dlugoscTablicy = inputStream.readInt();
+                byte[] bajty = new byte[dlugoscTablicy];
+                inputStream.readFully(bajty);
+                podpis[i] = new BigInteger(bajty);
+            }
+
+            //System.out.println("Wczytano z pliku wartość tablicy BigIntiger: " + Arrays.toString(podpis));
+
+            podpisBufor = podpis;
+
+            return podpis;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

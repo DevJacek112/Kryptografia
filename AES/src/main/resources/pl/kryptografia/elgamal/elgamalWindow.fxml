@@ -35,9 +35,9 @@
         </Text>
     </children>
 </GridPane>
-<HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
+<HBox alignment="CENTER" prefWidth="200.0">
     <children>
-        <VBox alignment="CENTER" prefHeight="500.0" prefWidth="500.0">
+        <VBox alignment="CENTER" prefWidth="500.0">
             <children>
                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Klucz publiczny g" />
                 <TextField fx:id="kluczPublicznyg" />
@@ -45,39 +45,63 @@
                <TextField fx:id="kluczPublicznyh" />
                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Klucz prywatny a" />
                <TextField fx:id="kluczPrywatnya" />
+               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Wartość p" />
+               <TextField fx:id="wartoscP" />
                 <Button mnemonicParsing="false" onAction="#onGenerujButtonClick" text="Generuj klucze">
                     <VBox.margin>
                         <Insets top="10.0" />
                     </VBox.margin></Button>
-                <HBox prefHeight="384.0" prefWidth="1015.0">
+                <HBox prefHeight="500.0" prefWidth="1060.0">
                     <children>
-                        <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="500.0">
+                        <VBox fx:id="lewy" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="500.0">
                             <children>
                                 <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj tekst, który chcesz podpisać">
                                     <VBox.margin>
-                                        <Insets bottom="5.0" top="10.0" />
+                                        <Insets />
                                     </VBox.margin></Text>
-                                <TextArea fx:id="tekstJawny" prefHeight="200.0" prefWidth="200.0" text="Jestem Polakiem z korzeniem z Afryki Choć nigdy nie byłem tam Znam oryginalne leczenia techniki Dyplom kupiłem, to mam" wrapText="true" />
+                                <TextArea fx:id="tekstJawny" prefHeight="200.0" prefWidth="200.0" text="Przykładowa wiadomość, dla której można utworzyć podpis." wrapText="true" />
                                 <Button mnemonicParsing="false" onAction="#onPodpiszButtonClick" text="Podpisz">
                                     <VBox.margin>
-                                        <Insets top="10.0" />
+                                        <Insets bottom="50.0" top="10.0" />
                                     </VBox.margin></Button>
+                          <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nazwę pliku z wiadomością (bez rozszerzenia)" />
+                          <TextArea fx:id="nazwaPliku" prefHeight="0.0" prefWidth="500.0" />
+                          <Button mnemonicParsing="false" onAction="#onWczytajPlikButtonClick" text="Wczytaj wiadomość z pliku o podanej powyżej nazwie">
+                              <VBox.margin>
+                                  <Insets top="10.0" />
+                              </VBox.margin>
+                          </Button>
+                          <Button mnemonicParsing="false" onAction="#onWeryfikujPlikButtonClick" text="Weryfikuj plik">
+                              <VBox.margin>
+                                  <Insets top="10.0" />
+                              </VBox.margin>
+                          </Button>
                             </children>
                             <HBox.margin>
                                 <Insets right="30.0" />
                             </HBox.margin>
                         </VBox>
-                        <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="485.0" prefWidth="500.0">
+                        <VBox fx:id="prawy" alignment="CENTER" fillWidth="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="500.0">
                             <children>
-                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podpisana wiadomość">
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podpis">
                                     <VBox.margin>
-                                        <Insets bottom="5.0" top="10.0" />
+                                        <Insets />
                                     </VBox.margin></Text>
-                                <TextArea fx:id="tekstDoDeszyfrowania" prefHeight="200.0" prefWidth="200.0" wrapText="true" />
+                                <TextArea fx:id="tekstDoDeszyfrowania" prefHeight="200.0" prefWidth="500.0" wrapText="true" />
                                 <Button mnemonicParsing="false" onAction="#onDeszyfrujButtonClick" text="Weryfikuj">
                                     <VBox.margin>
-                                        <Insets top="10.0" />
+                                        <Insets bottom="50.0" top="10.0" />
                                     </VBox.margin></Button>
+                           <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nazwę pliku z wiadomością (bez rozszerzenia)" />
+                           <TextArea fx:id="nazwaPliku1" prefHeight="0.0" prefWidth="500.0" />
+                          <Button mnemonicParsing="false" onAction="#onPodpiszPlikButtonClick" text="Zapisz podpis do pliku o podanej powyżej nazwie">
+                              <VBox.margin>
+                                 <Insets top="10.0" />
+                              </VBox.margin></Button>
+                           <Button mnemonicParsing="false" onAction="#onWczytajPodpisZPliku" text="Wczytaj podpis z pliku o podanej powyżej nazwie">
+                              <VBox.margin>
+                                 <Insets top="10.0" />
+                              </VBox.margin></Button>
                             </children>
                             <HBox.margin>
                                 <Insets left="30.0" />
@@ -92,27 +116,4 @@
         </VBox>
     </children>
 </HBox>
-<VBox alignment="CENTER">
-    <children>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Podaj nazwę pliku (bez rozszerzenia)" />
-        <TextArea fx:id="nazwaPliku" prefHeight="8.0" prefWidth="200.0" />
-        <Button mnemonicParsing="false" onAction="#onWczytajPlikButtonClick" text="Wczytaj z pliku o podanej powyżej nazwie">
-            <VBox.margin>
-                <Insets top="10.0" />
-            </VBox.margin>
-        </Button>
-        <Button mnemonicParsing="false" onAction="#onPodpiszPlikButtonClick" text="Podpisz Plik">
-            <VBox.margin>
-                <Insets top="10.0" />
-            </VBox.margin>
-        </Button>
-        <Button mnemonicParsing="false" onAction="#onWeryfikujPlikButtonClick" text="Weryfikuj plik">
-            <VBox.margin>
-                <Insets top="10.0" />
-            </VBox.margin>
-        </Button>
-         <Button mnemonicParsing="false" onAction="#onZapiszKluczeButtonClick" text="Zapisz klucze" />
-         <Button mnemonicParsing="false" onAction="#onWczytajKluczeButtonClick" text="Wczytaj klucze" />
-    </children>
-</VBox>
 </VBox>
