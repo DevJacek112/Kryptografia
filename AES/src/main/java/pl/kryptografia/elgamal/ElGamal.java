@@ -94,14 +94,13 @@ public class ElGamal {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-//        if (!czyPlik) messageDigest.update(wiadomosc.getBytes());
         messageDigest.update(wiadomosc);
         hasz = new BigInteger(1, messageDigest.digest());
         BigInteger pMinusJeden = p.subtract(BigInteger.ONE);
         r = BigInteger.probablePrime(keyLen,new Random());
         while(true)
             if (r.gcd(pMinusJeden).equals(BigInteger.ONE))break;
-            else r=r.nextProbablePrime(); // jeśli wynik jest zerem, większy niż pMinusJeden lub nie jest względnie pierwszy z pMinusJeden, to losuj dalej
+            else r=r.nextProbablePrime();
         s1 = g.modPow(r, p);
         rPrim = r.modInverse(pMinusJeden);
         s2 = ((hasz.subtract(kluczPrywatnyA.multiply(s1))).multiply(rPrim)).mod(pMinusJeden);
@@ -143,14 +142,11 @@ public class ElGamal {
     public static void zapiszPodpisDoPliku(BigInteger[] podpis, String nazwaPliku) throws FileNotFoundException {
         try (DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(nazwaPliku))) {
             outputStream.writeInt(podpis.length);
-
             for (BigInteger bigInteger : podpis) {
                 byte[] bajty = bigInteger.toByteArray();
                 outputStream.writeInt(bajty.length);
                 outputStream.write(bajty);
             }
-
-            //System.out.println("Zapisano do pliku tablicę BigIntiger: " + Arrays.toString(podpis));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -160,18 +156,13 @@ public class ElGamal {
         try (DataInputStream inputStream = new DataInputStream(new FileInputStream(nazwaPliku))) {
             int liczbaBajtow = inputStream.readInt();
             BigInteger[] podpis = new BigInteger[liczbaBajtow];
-
             for (int i = 0; i < liczbaBajtow; i++) {
                 int dlugoscTablicy = inputStream.readInt();
                 byte[] bajty = new byte[dlugoscTablicy];
                 inputStream.readFully(bajty);
                 podpis[i] = new BigInteger(bajty);
             }
-
-            //System.out.println("Wczytano z pliku wartość tablicy BigIntiger: " + Arrays.toString(podpis));
-
             podpisBufor = podpis;
-
             return podpis;
         } catch (IOException e) {
             throw new RuntimeException(e);
